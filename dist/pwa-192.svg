@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="Math Mission">
+  <rect width="192" height="192" rx="40" fill="#2563eb"/>
+  <rect x="28" y="28" width="136" height="136" rx="28" fill="#ffffff" opacity="0.16"/>
+  <text x="96" y="122" text-anchor="middle" font-size="82" font-weight="800" font-family="Arial, sans-serif" fill="#ffffff">×</text>
+</svg>
