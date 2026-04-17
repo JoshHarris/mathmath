@@ -1,4 +1,8 @@
-export type AppScreen = 'home' | 'test' | 'review' | 'practice'
+export type AppScreen = 'home' | 'test' | 'review' | 'practice' | 'adventure' | 'adventure-review'
+
+export type GameMode = 'classic' | 'mermaid-adventure'
+
+export type ThemeId = 'mermaid'
 
 export type Operation = 'addition' | 'subtraction' | 'multiplication' | 'division'
 
@@ -40,9 +44,60 @@ export interface TestQuestionRecord extends ArithmeticProblem {
   resolvedOrder: number | null
 }
 
+export type AdventureEncounterType = 'hazard' | 'boss'
+
+export type AdventureResult = 'victory' | 'timed-out' | 'out-of-hearts' | 'boss-escaped'
+
+export interface AdventureStageSummary {
+  stageIndex: number
+  stageName: string
+  hazardLabel: string
+  bossLabel: string
+  questionCount: number
+  bossHitCount: number
+  hazardsDodged: number
+  bossHitsLanded: number
+  sisterFreed: boolean
+  cleared: boolean
+}
+
+export interface AdventureSessionSummary {
+  result: AdventureResult
+  stageCount: number
+  sistersFreed: number
+  bossesDefeated: number
+  hazardsDodged: number
+  heartsRemaining: number
+  timerEnabled: boolean
+  stages: AdventureStageSummary[]
+}
+
+export interface AdventureQuestionRecord extends TestQuestionRecord {
+  stageIndex: number
+  stageName: string
+  hazardLabel: string
+  bossLabel: string
+  sisterName: string
+  encounterType: AdventureEncounterType
+}
+
+export interface AdventureStage {
+  stageIndex: number
+  stageName: string
+  hazardLabel: string
+  bossLabel: string
+  sisterName: string
+  questionIds: string[]
+  bossQuestionIds: string[]
+  questionCount: number
+  bossHitCount: number
+}
+
 export interface TestSessionRecord {
   id: string
   userId: string
+  mode?: GameMode
+  themeId?: ThemeId
   startedAt: string
   endedAt: string
   configuredTimeLimitSeconds: number
@@ -55,6 +110,7 @@ export interface TestSessionRecord {
   correctCount: number
   challengeDigits: number[]
   challengeFamilies: ProblemFamily[]
+  adventureSummary?: AdventureSessionSummary
   questions: TestQuestionRecord[]
 }
 
@@ -66,6 +122,8 @@ export interface PracticeProblem extends ArithmeticProblem {
 export interface PracticeRunRecord {
   id: string
   userId: string
+  mode?: GameMode
+  themeId?: ThemeId
   completedAt: string
   challengeDigits: number[]
   challengeFamilies: ProblemFamily[]
@@ -113,6 +171,8 @@ export interface TestState {
 export interface PracticeState {
   runId: string
   userId: string
+  mode: GameMode
+  themeId?: ThemeId
   challengeDigits: number[]
   challengeFamilies: ProblemFamily[]
   skippedProblems: PracticeProblem[]
@@ -121,4 +181,29 @@ export interface PracticeState {
   streak: number
   longestStreak: number
   totalAttempts: number
+}
+
+export interface AdventureState {
+  sessionId: string
+  userId: string
+  mode: 'mermaid-adventure'
+  themeId: ThemeId
+  startedAt: string
+  problemCount: number
+  selectedFamilies: ProblemFamily[]
+  timerEnabled: boolean
+  timeLimitSeconds: number
+  timeRemainingSeconds: number
+  isPaused: boolean
+  heartsRemaining: number
+  stages: AdventureStage[]
+  questions: AdventureQuestionRecord[]
+  currentQuestionIndex: number
+  currentStageIndex: number
+  bossHeartsRemaining: number
+  bossesDefeated: number
+  sistersFreed: number
+  hazardsDodged: number
+  lastResolution: 'idle' | 'dodge' | 'collision' | 'boss-hit'
+  isResolving: boolean
 }

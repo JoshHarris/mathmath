@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
-if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+if (import.meta.env.PROD && 'serviceWorker' in navigator && window.location.protocol !== 'file:') {
   window.addEventListener('load', () => {
     const serviceWorkerUrl = new URL('./sw.js', window.location.href)
     void navigator.serviceWorker.register(serviceWorkerUrl, { scope: './' })
