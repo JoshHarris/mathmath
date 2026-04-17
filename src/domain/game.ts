@@ -1,11 +1,14 @@
 import type {
   ArithmeticProblem,
+  AdventureSessionSummary,
+  GameMode,
   Operation,
   PracticeProblem,
   PracticeRunRecord,
   ProblemFamily,
   TestQuestionRecord,
   TestSessionRecord,
+  ThemeId,
   UserStats,
 } from '../types'
 
@@ -317,6 +320,8 @@ export function pickRandomProblem<T>(problems: T[], random: () => number = Math.
 export function buildSessionRecord(params: {
   sessionId: string
   userId: string
+  mode?: GameMode
+  themeId?: ThemeId
   startedAt: string
   endedAt: string
   timeLimitSeconds: number
@@ -325,6 +330,7 @@ export function buildSessionRecord(params: {
   timeRemainingSeconds: number
   questions: TestQuestionRecord[]
   wasTimedOut: boolean
+  adventureSummary?: AdventureSessionSummary
 }): TestSessionRecord {
   const answeredCount = params.questions.filter((question) => question.userAnswer !== '').length
   const correctCount = params.questions.filter((question) => question.isCorrect === true).length
@@ -334,6 +340,8 @@ export function buildSessionRecord(params: {
   return {
     id: params.sessionId,
     userId: params.userId,
+    mode: params.mode ?? 'classic',
+    themeId: params.themeId,
     startedAt: params.startedAt,
     endedAt: params.endedAt,
     configuredTimeLimitSeconds: params.timeLimitSeconds,
@@ -346,6 +354,7 @@ export function buildSessionRecord(params: {
     correctCount,
     challengeDigits,
     challengeFamilies,
+    adventureSummary: params.adventureSummary,
     questions: [...params.questions].sort((a, b) => {
       if (a.resolvedOrder === null && b.resolvedOrder === null) {
         return a.initialOrder - b.initialOrder
@@ -364,6 +373,8 @@ export function buildSessionRecord(params: {
 export function buildPracticeRunRecord(params: {
   runId: string
   userId: string
+  mode?: GameMode
+  themeId?: ThemeId
   challengeDigits: number[]
   challengeFamilies: ProblemFamily[]
   skippedProblems: PracticeProblem[]
@@ -374,6 +385,8 @@ export function buildPracticeRunRecord(params: {
   return {
     id: params.runId,
     userId: params.userId,
+    mode: params.mode ?? 'classic',
+    themeId: params.themeId,
     completedAt: new Date().toISOString(),
     challengeDigits: params.challengeDigits,
     challengeFamilies: params.challengeFamilies,
